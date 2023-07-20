@@ -1,6 +1,14 @@
-# Sparkify - Data Warehouse on AWS
+![Star Badge](https://img.shields.io/static/v1?label=%F0%9F%8C%9F&message=If%20Useful&style=style=flat&color=BC4E99)
+![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)
 
-![ETL](assets/sparkify-s3-to-redshift-etl.png)
+# Sparkify - Data Warehouse on AWS <img src="https://img.freepik.com/premium-vector/music-tape-with-pixel-art-style_475147-532.jpg" align="right" width="150" />
+
+<br>
+<div align = center>
+<img src="assets/sparkify-s3-to-redshift-etl.png" align="center" width="700" />
+
+</div>
+
 ## Introduction
 A music streaming startup, Sparkify, has grown their user base and song database and want to move their processes and data onto the cloud. Their data resides in S3, in a directory of JSON logs on user activity on the app, as well as a directory with JSON metadata on the songs in their app.
 
@@ -42,7 +50,9 @@ This schema, commonly referred to as the star scheme, empowers the company to ob
 
 To populate the relational database, an ETL pipeline is employed, efficiently extracting the required information from both user behavior log files and corresponding master data of songs, subsequently transforming it into the schema. The distribution of facts and dimensions is automated using Redshift, eliminating the need for manual definition regarding table distribution and redundancy on individual cluster nodes.
 
-![Schema](assets/schema.png)
+<div align='center'>
+<img src="assets/schema.png" align="center" width="600" />
+</div>
 
 ### 1. Fact Table
 * **`songplays`** - records in event data associated with song plays i.e. records with page NextSong

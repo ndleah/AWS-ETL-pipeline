@@ -5,7 +5,7 @@
 
 <br>
 <div align = center>
-<img src="assets/sparkify-s3-to-redshift-etl.png" align="center" width="700" />
+<img src="assets/etl.png" align="center" width="700" />
 
 </div>
 

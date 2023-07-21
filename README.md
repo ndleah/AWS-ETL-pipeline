@@ -67,6 +67,7 @@ songplay_id, start_time, user_id, level, song_id, artist_id, session_id, locatio
 ##  Project Files
 
 In order to create ETL pipeline on AWS, The project includes four files:
+* **[main.py](main.py)** is the main script that can run all modular scripts in this project (the whole ETL pipeline).
 * **[create_table.py](create_table.py)** is where you'll create your fact and dimension tables for the star schema in Redshift.
 * **[etl.py](etl.py)** is where you'll load data from S3 into staging tables on Redshift and then process that data into your analytics tables on Redshift.
 * **[sql_queries.py](sql_queries.py)** is where you'll define you SQL statements, which will be imported into the two other files above.

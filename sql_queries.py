@@ -24,89 +24,89 @@ time_table_drop = "DROP TABLE  IF EXISTS time"
 
 staging_events_table_create= ("""
     CREATE TABLE IF NOT EXISTS staging_events(
-                                artist TEXT,
-                                auth TEXT,
-                                first_name TEXT,
-                                gender CHAR(1),
+                                artist       TEXT,
+                                auth         TEXT,
+                                first_name   TEXT,
+                                gender       CHAR(1),
                                 item_session INTEGER,
-                                last_name TEXT,
-                                length NUMERIC,
-                                level TEXT,
-                                location TEXT,
-                                method TEXT,
-                                page TEXT,
+                                last_name    TEXT,
+                                length       NUMERIC,
+                                level        TEXT,
+                                location     TEXT,
+                                method       TEXT,
+                                page         TEXT,
                                 registration NUMERIC,
-                                session_id INTEGER,
-                                song TEXT,
-                                status INTEGER,
-                                ts BIGINT,
-                                user_agent TEXT,
-                                user_id INTEGER )
+                                session_id   INTEGER,
+                                song         TEXT,
+                                status       INTEGER,
+                                ts           BIGINT,
+                                user_agent   TEXT,
+                                user_id      INTEGER )
 """)
 
 staging_songs_table_create = ("""
     CREATE  TABLE IF NOT EXISTS staging_songs(
-                                num_songs INTEGER,
-                                artist_id TEXT,
-                                artist_latitude NUMERIC,
+                                num_songs        INTEGER,
+                                artist_id        TEXT,
+                                artist_latitude  NUMERIC,
                                 artist_longitude NUMERIC,
-                                artist_location TEXT,
-                                artist_name TEXT,
-                                song_id TEXT,
-                                title TEXT,
-                                duration NUMERIC,
-                                year INTEGER)
+                                artist_location  TEXT,
+                                artist_name      TEXT,
+                                song_id          TEXT,
+                                title            TEXT,
+                                duration         NUMERIC,
+                                year             INTEGER)
 """)
 
 songplay_table_create = ("""
     CREATE TABLE IF NOT EXISTS songplay(
                             songplay_id INT IDENTITY(1,1) PRIMARY KEY,
-                            start_time TIMESTAMP,
-                            user_id INTEGER NOT NULL,
-                            level TEXT,
-                            song_id TEXT,
-                            artist_id TEXT,
-                            session_id INTEGER,
-                            location TEXT,
-                            user_agent TEXT)
+                            start_time  TIMESTAMP,
+                            user_id     INTEGER NOT NULL,
+                            level       TEXT,
+                            song_id     TEXT,
+                            artist_id   TEXT,
+                            session_id  INTEGER,
+                            location    TEXT,
+                            user_agent  TEXT)
 """)
 
 user_table_create = ("""
     CREATE TABLE IF NOT EXISTS users(
-                        user_id INTEGER PRIMARY KEY,
-                        first_name TEXT NOT NULL,
-                        last_name TEXT NOT NULL,
-                        gender CHAR(1),
-                        level TEXT)
+                        user_id     INTEGER PRIMARY KEY,
+                        first_name  TEXT NOT NULL,
+                        last_name   TEXT NOT NULL,
+                        gender      CHAR(1),
+                        level       TEXT)
 """)
 
 song_table_create = ("""
     CREATE TABLE IF NOT EXISTS songs(
-                        song_id TEXT PRIMARY KEY,
-                        title TEXT,
-                        artist_id TEXT,
-                        year INTEGER,
-                        duration NUMERIC)
+                        song_id     TEXT PRIMARY KEY,
+                        title       TEXT,
+                        artist_id   TEXT,
+                        year        INTEGER,
+                        duration    NUMERIC)
 """)
 
 artist_table_create = ("""
     CREATE TABLE IF NOT EXISTS artist(
-                        artist_id TEXT PRIMARY KEY,
-                        name TEXT,
-                        location TEXT,
-                        latitude NUMERIC,
-                        longitude NUMERIC)
+                        artist_id   TEXT PRIMARY KEY,
+                        name        TEXT,
+                        location    TEXT,
+                        latitude    NUMERIC,
+                        longitude   NUMERIC)
 """)
 
 time_table_create = ("""
     CREATE TABLE IF NOT EXISTS time(
-                        start_time TIMESTAMP PRIMARY KEY,
-                        hour INTEGER,
-                        day INTEGER,
-                        week INTEGER,
-                        month INTEGER,
-                        year INTEGER,
-                        weekDay INTEGER)
+                        start_time  TIMESTAMP PRIMARY KEY,
+                        hour        INTEGER,
+                        day         INTEGER,
+                        week        INTEGER,
+                        month       INTEGER,
+                        year        INTEGER,
+                        weekDay     INTEGER)
 """)
 
 # STAGING TABLES
@@ -117,9 +117,9 @@ staging_events_copy = (f"""copy staging_events
                         json {LOG_JSONPATH}""")
 
 staging_songs_copy = (f"""copy staging_songs 
-                          from {SONG_DATA} 
-                          iam_role {IAM_ROLE}
-                          json 'auto'""")
+                        from {SONG_DATA} 
+                        iam_role {IAM_ROLE}
+                        json 'auto'""")
 
 # FINAL TABLES
 
@@ -127,11 +127,13 @@ songplay_table_insert = ("""
     INSERT INTO songplay(start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
                             SELECT  timestamp 'epoch' + e.ts/1000 * interval '1 second' as start_time, e.user_id, e.level, 
                                     s.song_id, s.artist_id, e.session_id, e.location, e.user_agent
-                            FROM staging_events e, staging_songs s
+                            FROM staging_events e
+                            JOIN staging_songs s 
+                            ON e.song = s.title 
+                            AND e.artist = s.artist_name
+                            AND e.length = s.duration
                             WHERE e.page = 'NextSong' AND
-                            e.song =s.title AND
-                            e.artist = s.artist_name AND
-                            e.length = s.duration
+                            
 """)
 
 user_table_insert = ("""
@@ -150,7 +152,7 @@ song_table_insert = ("""
 
 artist_table_insert = ("""
     INSERT INTO artist(artist_id, name, location, latitude, longitude)
-                        SELECT distinct artist_id, artist_name, artist_location , artist_latitude, artist_longitude 
+                        SELECT DISTINCT artist_id, artist_name, artist_location , artist_latitude, artist_longitude 
                         FROM staging_songs
                         WHERE artist_id IS NOT NULL   
 """)

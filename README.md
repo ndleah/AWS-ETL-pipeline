@@ -5,7 +5,7 @@
 
 <br>
 <div align = center>
-<img src="assets/etl.png" align="center" width="700" />
+<img src="assets/etl.png" align="center" width="500" />
 
 </div>
 

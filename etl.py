@@ -4,18 +4,33 @@ from sql_queries import copy_table_queries, insert_table_queries
 
 
 def load_staging_tables(cur, conn):
+    """
+    Run's all the copy table queries defined in sql_queries.py
+    :param cur: cursor to the database
+    :param conn: connection to the database
+    :return: None
+    """
     for query in copy_table_queries:
         cur.execute(query)
         conn.commit()
 
 
 def insert_tables(cur, conn):
+    """
+    Run's all the insert table queries defined in sql_queries.py
+    :param cur: cursor to the database
+    :param conn: connection to the database
+    :return: None
+    """
     for query in insert_table_queries:
         cur.execute(query)
         conn.commit()
 
 
 def main():
+    """
+    Driver main function.
+    """
     config = configparser.ConfigParser()
     config.read('dwh.cfg')
 
